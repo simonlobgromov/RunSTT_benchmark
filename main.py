@@ -127,7 +127,7 @@ class AutoBenchmark:
         self.text_predict_ = Dataset.from_list(text_predict)
 
     def make_result_dataset(self):
-        columns_data = dataset.select_columns(['id',
+        columns_data = self.dataset.select_columns(['id',
                                                'raw_transcription',
                                                'transcription',
                                                'dataset_name',
