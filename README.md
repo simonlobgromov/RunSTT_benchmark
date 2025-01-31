@@ -6,8 +6,8 @@ This tool automates the process of benchmarking speech recognition models using 
 
 1. Clone the repository:
 ```bash
-git clone [repository-url]
-cd [repository-name]
+git clone https://github.com/simonlobgromov/RunSTT_benchmark
+cd RunSTT_benchmark
 ```
 
 2. Install requirements:
