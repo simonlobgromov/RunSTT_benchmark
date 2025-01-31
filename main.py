@@ -141,3 +141,6 @@ class AutoBenchmark:
         dataset_repo_name = self.result_datasset_config['reponame']
         private = self.result_datasset_config['private']
         self.result_dataset.push_to_hub(dataset_repo_name, private=private)
+
+
+benchmark = AutoBenchmark()
