@@ -1,0 +1,10 @@
+dataset:
+ reponame: 'Simonlob/STT_Benchmark'
+ split: 'train'
+
+result_dataset:
+ reponame: 'Simonlob/RunBenchmark_Res'
+ private: false
+
+model_id: 'the-cramer-project/AkylAI-STT-small'
+batch_size: 16
