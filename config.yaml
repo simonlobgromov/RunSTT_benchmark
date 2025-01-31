@@ -7,4 +7,4 @@ result_dataset:
  private: false
 
 model_id: 'the-cramer-project/AkylAI-STT-small'
-batch_size: 16
+batch_size: 32
