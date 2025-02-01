@@ -45,6 +45,8 @@ result_dataset:
 
 model_id: 'model-name'               # Model to benchmark
 batch_size: 16                       # Processing batch size
+accelerator: 'gpu'
+devices: [0, 1, 2, 3]
 ```
 
 ## Usage
