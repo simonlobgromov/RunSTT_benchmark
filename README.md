@@ -90,18 +90,15 @@ Common issues and solutions:
 
 Feel free to open issues or submit pull requests.
 
-## License
-
-[Your license here]
 
 ## Citation
 
 ```
-@misc{your-benchmark-tool,
-  author = {Your Name},
-  title = {Speech Recognition Benchmark Tool},
-  year = {2023},
+@misc{stt-benchmark-tool,
+  author = {Denis Pavloff},
+  title = {Speech Recognition Benchmark Tool for Kyrgyz Language},
+  year = {2025},
   publisher = {GitHub},
-  url = {repository-url}
+  url = {https://github.com/simonlobgromov/RunSTT_benchmark}
 }
 ```
