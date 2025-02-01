@@ -4,3 +4,4 @@ numpy>=1.24.3
 torch>=2.0.1
 tqdm>=4.65.0
 PyYAML>=6.0.1
+accelerate>=0.26.0
