@@ -6,7 +6,60 @@ from tqdm import tqdm
 import yaml
 from multiprocessing import Process
 
+
 class ChunkBenchmark:
+
+    """
+    A class for processing a chunk of speech dataset on a specific GPU.
+    
+    This class handles:
+    - Model initialization on specified GPU
+    - Batch processing of audio data
+    - Transcription generation
+    - Dataset preparation and concatenation
+    
+    Args:
+       config (dict): Configuration dictionary containing:
+           - model_id: Model identifier
+           - batch_size: Processing batch size
+           - accelerator: Type of hardware accelerator ('gpu' or 'cpu')
+       data_chunk (Dataset): Chunk of dataset to process
+       device (int, optional): GPU device ID. Defaults to None.
+    
+    Attributes:
+       process_name (str): Identifier for the process
+       config (dict): Configuration settings
+       batch_size (int): Batch size for processing
+       model_id (str): Model identifier
+       device (str): Device specification ('cuda:X' or 'cpu')
+       torch_dtype: PyTorch data type
+       model: Loaded speech recognition model
+       processor: Model processor
+       pipe: Inference pipeline
+       dataset: Input data chunk
+       text_predict_: Generated transcriptions dataset
+    
+    Methods:
+       transcribe() -> None:
+           Processes audio data and generates transcriptions.
+           Stores results in text_predict_ attribute.
+    
+       __call__() -> Dataset:
+           Main processing method that:
+           1. Runs transcription
+           2. Selects required columns
+           3. Renames prediction column
+           4. Returns concatenated dataset
+    
+    Example:
+       >>> chunk_processor = ChunkBenchmark(config, data_chunk, device=0)
+       >>> result_dataset = chunk_processor()
+    
+    Notes:
+       - Prints progress information with process name
+       - Handles GPU/CPU selection based on availability
+       - Returns dataset with original features plus predictions
+    """
 
     def __init__(self, config:dict, data_chunk, device:int = None):
         print(f'_______ CREATING MODEL FOR {device} GPU ________')
@@ -38,7 +91,6 @@ class ChunkBenchmark:
 
         self.dataset = data_chunk
 
-
     def transcribe(self):
         print(f'===START: {self.process_name}')
         text_predict = []
@@ -63,7 +115,67 @@ class ChunkBenchmark:
         return concatenate_datasets([columns_data, self.text_predict_], axis=1)
 
 
+
 class ProcessBenchmark:
+
+    """
+    A class for parallel processing of speech recognition benchmarks across multiple GPUs.
+    
+    This class manages:
+    - Loading and distributing datasets across multiple GPUs
+    - Parallel processing of audio transcription
+    - Collection and combination of results
+    - Uploading final dataset to Hugging Face Hub
+    
+    Args:
+       config (str): Path to YAML configuration file containing:
+           - dataset: Input dataset configuration
+           - result_dataset: Output dataset configuration
+           - model_id: Model identifier
+           - batch_size: Processing batch size
+           - accelerator: Hardware accelerator type
+           - devices: List of GPU devices to use
+       chunk_benchmark (class): Class for processing individual chunks (defaults to ChunkBenchmark)
+    
+    Attributes:
+       config (dict): Loaded configuration
+       batch_size (int): Batch size for processing
+       dataset_config (dict): Input dataset configuration
+       result_dataset_config (dict): Output dataset configuration
+       dataset (Dataset): Loaded input dataset
+       chunk_benchmark: Class for chunk processing
+       num_gpu (int): Number of GPUs to use
+    
+    Methods:
+       load_config(config_path: str) -> dict:
+           Loads configuration from YAML file.
+    
+       print_config(config: dict, indent: int) -> None:
+           Pretty prints configuration structure.
+    
+       create_process() -> None:
+           Creates and manages parallel processes for GPU processing.
+    
+       run_one_process(config: dict, data_chunk, device: int) -> None:
+           Processes a single data chunk on specified device.
+           Saves results to temporary files.
+    
+       collect_results() -> Dataset:
+           Collects and combines results from all processes.
+    
+       push_HF() -> None:
+           Pushes final dataset to Hugging Face Hub.
+    
+    Example:
+       >>> benchmark = ProcessBenchmark('config.yaml')
+       >>> benchmark.push_HF()  # Processes data and uploads to HF Hub
+    
+    Notes:
+       - Uses file system for intermediate results storage
+       - Supports both single and multi-GPU processing
+       - Automatically handles data sharding across devices
+       - Provides progress tracking for each process
+    """
 
     def __init__(self, config:str = 'config.yaml', chunk_benchmark = ChunkBenchmark):
 
@@ -82,8 +194,7 @@ class ProcessBenchmark:
 
         self.create_process()
 
-
-
+    
     def load_config(self, config_path:str)->dict:
         with open(config_path, 'r', encoding='utf-8') as f:
             config = yaml.safe_load(f)
@@ -132,13 +243,11 @@ class ProcessBenchmark:
                         dev
                         )
                     )
-
                     processes.append(process)
                     process.start()
 
                 for process in processes:
                     process.join()
-
             else:
                 dev = 0
                 self.run_one_process(self.config, self.dataset, dev)
