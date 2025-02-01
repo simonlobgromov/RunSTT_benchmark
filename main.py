@@ -151,6 +151,7 @@ class ProcessBenchmark:
         # self.res_dataset_list.append(processor())
         result = processor()
         result.save_to_disk(f"temp_result_{device}")
+        print(f'======FILE temp_result_{device} SAVED!======')
 
 
     def collect_results(self):
