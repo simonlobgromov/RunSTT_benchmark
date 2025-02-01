@@ -66,6 +66,7 @@ class ProcessBenchmark:
     def __init__(self, config:str = 'config.yaml', chunk_benchmark = ChunkBenchmark):
 
         self.config = self.load_config(config)
+        self.print_config(self.config)
         self.batch_size = self.config['batch_size']
         self.dataset_config = self.config['dataset']
         self.result_datasset_config = self.config['result_dataset']
@@ -85,6 +86,30 @@ class ProcessBenchmark:
         with open(config_path, 'r', encoding='utf-8') as f:
             config = yaml.safe_load(f)
         return config
+        
+    def print_config(self, config: dict, indent: int = 4) -> None:
+        """
+        Recursively prints configuration with proper indentation.
+        
+        Args:
+            config: Configuration dictionary
+            indent: Current indentation level
+        """
+        print("\n" + "="*50)
+        print("Configuration:")
+        print("="*50)
+    
+        def _print_recursive(d: dict, indent: int = 4):
+            for key, value in d.items():
+                indent_str = "  " * indent
+                if isinstance(value, dict):
+                    print(f"{indent_str}{key}:")
+                    _print_recursive(value, indent + 1)
+                else:
+                    print(f"{indent_str}{key}: {value}")
+    
+        _print_recursive(config)
+        print("\n" + "="*50 + "\n")
 
     def create_process(self):
         
