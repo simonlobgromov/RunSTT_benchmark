@@ -10,6 +10,7 @@ class ChunkBenchmark:
 
     def __init__(self, config:dict, data_chunk, device:int = None):
         print(f'_______ CREATING MODEL FOR {device} GPU ________')
+        self.process_name = f'Process_{device}'
         self.config = config
         self.batch_size = self.config['batch_size']
         self.model_id = self.config['model_id']
@@ -39,7 +40,7 @@ class ChunkBenchmark:
 
 
     def transcribe(self):
-
+        print(f'===START: {self.process_name}')
         text_predict = []
         for batch in tqdm(self.dataset.iter(batch_size=self.batch_size), desc='Batch'):
             batch_audio = []
@@ -58,6 +59,7 @@ class ChunkBenchmark:
                                                     'augmentation_type',
                                                     'snr'])
         self.text_predict_ = self.text_predict_.rename_column('text', 'text_predict')
+        print(f'=======END: {self.process_name}')
         return concatenate_datasets([columns_data, self.text_predict_], axis=1)
 
 
@@ -76,7 +78,7 @@ class ProcessBenchmark:
             self.dataset = self.dataset[self.dataset_config['split']]
         
         self.chunk_benchmark = chunk_benchmark
-        self.res_dataset_list = []
+        # self.res_dataset_list = []
 
         self.create_process()
 
@@ -146,17 +148,34 @@ class ProcessBenchmark:
     def run_one_process(self, config:dict, data_chunk, device:int)->None:
 
         processor = self.chunk_benchmark(config, data_chunk, device)
-        self.res_dataset_list.append(processor())
+        # self.res_dataset_list.append(processor())
+        result = processor()
+        result.save_to_disk(f"temp_result_{device}")
+
+
+    def collect_results(self):
+        
+        if isinstance(self.config['devices'], list):
+            results = []
+            for dev in self.config['devices']:
+                dataset = Dataset.load_from_disk(f"temp_result_{dev}")
+                results.append(dataset)
+            return concatenate_datasets(results)
+        else:
+            try:
+                return Dataset.load_from_disk("temp_result_0")
+            except Exception:
+                print('NOT DATASET (((')
 
     def push_HF(self):
 
-        if len(self.res_dataset_list) > 1:
-            result_dataset = concatenate_datasets(self.res_dataset_list)
-        elif len(self.res_dataset_list) == 1:
-            result_dataset = self.res_dataset_list[0]
-        else:
-            print('NO DATASET TO PUSH HUB')
-
+        # if len(self.res_dataset_list) > 1:
+        #     result_dataset = concatenate_datasets(self.res_dataset_list)
+        # elif len(self.res_dataset_list) == 1:
+        #     result_dataset = self.res_dataset_list[0]
+        # else:
+        #     print('NO DATASET TO PUSH HUB')
+        result_dataset = self.collect_results()
         dataset_repo_name = self.result_datasset_config['reponame']
         private = self.result_datasset_config['private']
         result_dataset.push_to_hub(dataset_repo_name, private=private)
