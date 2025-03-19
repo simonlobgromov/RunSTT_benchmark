@@ -104,12 +104,13 @@ class ChunkBenchmark:
     def __call__(self):
 
         self.transcribe()
-        columns_data = self.dataset.select_columns(['id',
-                                                    'raw_transcription',
-                                                    'transcription',
-                                                    'dataset_name',
-                                                    'augmentation_type',
-                                                    'snr'])
+        columns_data = self.dataset.remove_columns('audio')
+        # columns_data = self.dataset.select_columns(['id',
+        #                                             'raw_transcription',
+        #                                             'transcription',
+        #                                             'dataset_name',
+        #                                             'augmentation_type',
+        #                                             'snr'])
         self.text_predict_ = self.text_predict_.rename_column('text', 'text_predict')
         print(f'=======END: {self.process_name}')
         return concatenate_datasets([columns_data, self.text_predict_], axis=1)
