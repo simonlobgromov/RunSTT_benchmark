@@ -7,6 +7,7 @@ result_dataset:
  private: false
 
 model_id: 'the-cramer-project/AkylAI-STT-small'
+target_sampling_rate: 16000
 batch_size: 16
 accelerator: 'gpu'
 devices: [0, 1, 2, 3]
