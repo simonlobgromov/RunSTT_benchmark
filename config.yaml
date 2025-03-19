@@ -10,4 +10,4 @@ model_id: 'the-cramer-project/AkylAI-STT-small'
 target_sampling_rate: 16000
 batch_size: 8
 accelerator: 'gpu'
-devices: [0, 1, 2, 3]
+devices: [0, 1, 2, 3, 4, 5, 6, 7]
