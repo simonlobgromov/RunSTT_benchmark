@@ -1,9 +1,9 @@
 dataset:
- reponame: 'Simonlob/STT_Benchmark'
+ reponame: 'Simonlob/Kany_dataset_mk4_v2.0_2025'
  split: 'train'
 
 result_dataset:
- reponame: 'Simonlob/RunBenchmark_Res'
+ reponame: 'Simonlob/Check_audio_kany_dataset_stt'
  private: false
 
 model_id: 'the-cramer-project/AkylAI-STT-small'
