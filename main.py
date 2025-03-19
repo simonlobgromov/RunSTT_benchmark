@@ -181,6 +181,7 @@ class ProcessBenchmark:
     def __init__(self, config:str = 'config.yaml', chunk_benchmark = ChunkBenchmark):
 
         self.config = self.load_config(config)
+        self.target_sampling_rate = self.config['target_sampling_rate']
         self.print_config(self.config)
         self.batch_size = self.config['batch_size']
         self.dataset_config = self.config['dataset']
@@ -189,6 +190,7 @@ class ProcessBenchmark:
         self.dataset = load_dataset(self.dataset_config['reponame'])
         if self.dataset_config['split']:
             self.dataset = self.dataset[self.dataset_config['split']]
+        self.dataset = self.dataset.cast_column("audio", Audio(sampling_rate=self.target_sampling_rate))
         
         self.chunk_benchmark = chunk_benchmark
         # self.res_dataset_list = []
