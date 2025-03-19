@@ -1,4 +1,4 @@
-from datasets import load_dataset, concatenate_datasets, Dataset
+from datasets import load_dataset, concatenate_datasets, Dataset, Audio
 from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
 import numpy as np
 import torch
