@@ -3,11 +3,13 @@ dataset:
  split: train
 
 result_dataset:
- reponame: 'kyrgyz-ai/result_v0.1_asr-fleurs-en-kg-ru-benchmark'
+ reponame: kyrgyz-ai/result_v0.1_asr-fleurs-en-kg-ru-benchmark
  private: true
 
-model_id: 'kyrgyz-ai/AkylAI-STT-small'
-tokenizer_id: 'kyrgyz-ai/AkylAI-STT-small'
+model_id: kyrgyz-ai/AkylAI-STT-small
+tokenizer_id: kyrgyz-ai/whisper_tokenizer_ky
+language: kyrgyz
+trust_remote_code: true
 target_sampling_rate: 16000
 batch_size: 8
 accelerator: 'gpu'
