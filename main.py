@@ -83,7 +83,7 @@ class ChunkBenchmark:
             low_cpu_mem_usage=True, use_safetensors=True)
         self.model.to(self.device)
         
-        self.feature_extractor = WhisperFeatureExtractor.from_pretrained(model_id)
+        self.feature_extractor = WhisperFeatureExtractor.from_pretrained(self.model_id)
         self.tokenizer = AutoTokenizer.from_pretrained(
                                 self.tokenizer_id,
                                 trust_remote_code=self.trust_remote_code,
