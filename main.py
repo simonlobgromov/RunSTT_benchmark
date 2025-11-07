@@ -1,5 +1,5 @@
 from datasets import load_dataset, concatenate_datasets, Dataset, Audio
-from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
+from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline, WhisperFeatureExtractor, AutoTokenizer
 import numpy as np
 import torch
 from tqdm import tqdm
@@ -67,6 +67,9 @@ class ChunkBenchmark:
         self.config = config
         self.batch_size = self.config['batch_size']
         self.model_id = self.config['model_id']
+        self.tokenizer_id = self.config['tokenizer_id']
+        self.language = self.config['language']
+        self.trust_remote_code = self.config['trust_remote_code']
 
         if config['accelerator'] == 'gpu' and torch.cuda.is_available():
             self.device = f"cuda:{device}"
@@ -79,12 +82,20 @@ class ChunkBenchmark:
             self.model_id, torch_dtype=self.torch_dtype,
             low_cpu_mem_usage=True, use_safetensors=True)
         self.model.to(self.device)
-        self.processor = AutoProcessor.from_pretrained(self.model_id)
+        
+        self.feature_extractor = WhisperFeatureExtractor.from_pretrained(model_id)
+        self.tokenizer = AutoTokenizer.from_pretrained(
+                                self.tokenizer_id,
+                                trust_remote_code=self.trust_remote_code,
+                                language=self.language,
+                                task="transcribe"
+                            )
+        
         self.pipe = pipeline(
             "automatic-speech-recognition",
             model=self.model,
-            tokenizer=self.processor.tokenizer,
-            feature_extractor=self.processor.feature_extractor,
+            tokenizer=self.tokenizer,
+            feature_extractor=self.feature_extractor,
             torch_dtype=self.torch_dtype,
             device=self.device
         )
