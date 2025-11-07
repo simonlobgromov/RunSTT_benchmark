@@ -1,12 +1,13 @@
 dataset:
- reponame: 'Simonlob/Kany_dataset_mk4_v2.0_2025'
- split: 'train'
+ reponame: kyrgyz-ai/asr-fleurs-en-kg-ru-benchmark
+ split: train
 
 result_dataset:
- reponame: 'Simonlob/Check_audio_kany_dataset_stt'
- private: false
+ reponame: 'kyrgyz-ai/result_v0.1_asr-fleurs-en-kg-ru-benchmark'
+ private: true
 
-model_id: 'the-cramer-project/AkylAI-STT-small'
+model_id: 'kyrgyz-ai/AkylAI-STT-small'
+tokenizer_id: 'kyrgyz-ai/AkylAI-STT-small'
 target_sampling_rate: 16000
 batch_size: 8
 accelerator: 'gpu'
