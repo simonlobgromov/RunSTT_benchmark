@@ -17,34 +17,15 @@
 
 
 
-# dataset:
-#  reponame: kyrgyz-ai/asr-fleurs-en-kg-ru-benchmark
-#  split: train
-
-# result_dataset:
-#  reponame: kyrgyz-ai/result_v1.3_asr-fleurs-en-kg-ru-benchmark
-#  private: true
-
-# model_id: nineninesix/whisper-medium_v2-ky-en-ru-135000st
-# tokenizer_id: kyrgyz-ai/whisper_tokenizer_ky
-# language: kyrgyz
-# trust_remote_code: true
-# target_sampling_rate: 16000
-# batch_size: 2
-# accelerator: 'gpu'
-# devices: [0, 1, 2, 3, 4, 5, 6, 7]
-
-
-
 dataset:
  reponame: kyrgyz-ai/asr-fleurs-en-kg-ru-benchmark
  split: train
 
 result_dataset:
- reponame: kyrgyz-ai/result_v1.2_asr-fleurs-en-kg-ru-benchmark
+ reponame: kyrgyz-ai/result_v1.3_asr-fleurs-en-kg-ru-benchmark
  private: true
 
-model_id: nineninesix/whisper-medium_v2-ky-en-ru-90000st
+model_id: nineninesix/whisper-medium_v2-ky-en-ru-135000st
 tokenizer_id: kyrgyz-ai/whisper_tokenizer_ky
 language: kyrgyz
 trust_remote_code: true
@@ -52,6 +33,25 @@ target_sampling_rate: 16000
 batch_size: 2
 accelerator: 'gpu'
 devices: [0, 1, 2, 3, 4, 5, 6, 7]
+
+
+
+# dataset:
+#  reponame: kyrgyz-ai/asr-fleurs-en-kg-ru-benchmark
+#  split: train
+
+# result_dataset:
+#  reponame: kyrgyz-ai/result_v1.2_asr-fleurs-en-kg-ru-benchmark
+#  private: true
+
+# model_id: nineninesix/whisper-medium_v2-ky-en-ru-90000st
+# tokenizer_id: kyrgyz-ai/whisper_tokenizer_ky
+# language: kyrgyz
+# trust_remote_code: true
+# target_sampling_rate: 16000
+# batch_size: 2
+# accelerator: 'gpu'
+# devices: [0, 1, 2, 3, 4, 5, 6, 7]
 
 
 
